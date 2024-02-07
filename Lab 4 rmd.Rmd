@@ -36,7 +36,7 @@ chi_sq_test
 ```
 
 ### 2. The following list gives the number of degrees of freedom and the chi-squared test statistic for several goodness-of-fit test. Find the P-value for each test.
-
+The p-values are 0.042379078, 0.906748324, 0.008651695, 0.259177369, and 0.115302253. 
 
 ```{r}
 column1 <- c(1,4,2,10,1)
@@ -58,16 +58,35 @@ print(deg_freedom)
 ### 3. Soccer reaches its apex every four years at the World Cup, attracting worldwide attention and fanatic devotion. The World Cup is widely thought to be the event that decides the best soccer team in the world. But how much do skill differences determine the outcome? If the probability of a goal is the same for all teams and games, and if goals are independent, then we would expect the frequency distribution of goals per game to approximate a Poisson distribution. In contrast, if skill differences really matter, then we would expect more high scores and more low scores than predicted from the Poisson distribution. The following table tallies the number of goals scored by one of the two teams (randomly chosen) in every game of the knockout round of the World Cup from 1986 through 2010.
 
 ```{r}
-column1 <- c(0,1,2,3,4,5,">5", "total")
-column2 <- c(37,44,21,10,4,1,0,117)
+column1 <- c("0","1","2","3","4","5",">5")
+column2 <- c(37,44,21,10,4,1,0)
 
 soccer <- data.frame(goals = column1, frequency = column2)
+
+column1_2 <- c(0,1,2,3,4,5,5)
+column2_2 <- c(37,44,21,10,4,1,0)
+
+soccer_2 <- data.frame(goals = column1_2, frequency = column2_2)
 ```
 
 #### a. Plot the frequency distribution of goals per team using the data in the table. 
 ### b. What is the mean number of goals per game?
+
+The mean number of goals is 6.85 goals. 
 ```{r}
 
+
+# Calculate the mean (excluding "total")
+mean_value <- sum(soccer_2$goals * soccer_2$frequency) / sum(soccer_2$goals)
+
+# Create the plot
+ggplot(soccer, aes(x = goals, y = frequency)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_hline(yintercept = mean_value, color = "red", linetype = "dashed", size = 1) +
+  geom_text(aes(label = paste("Mean:", round(mean_value, 2))), 
+            x = "4.5", y = mean_value + 2, color = "red", size = 4, hjust = 0) +
+  labs(title = "Soccer Goals Frequency", x = "Number of Goals", y = "Frequency") +
+  theme_minimal()
 ```
 #### c. Using the Poisson distribution, calculate the expected frequency of games and teams with 0, 1, 2, ….,5 goals, assuming independence and equal probability of scoring.
 ```{r}
