@@ -1,0 +1,160 @@
+---
+title: "Lab 4"
+author: "Lily Heidger"
+date: "2024-02-07"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+## Lab 4
+
+### 1. Truffles are a great delicacy, sending thousands of mushroom hunters into the forest each fall to find them. A set of plots of equal size in an old-growth forest in Northern California was surveyed to count the number of truffles (Waters et al., 1997). The resulting distribution is presented in the following table. Are truffles randomly located around the forest? How can you tell? (The mean number of truffles per plot, calculated from these data, is 0.60)
+
+Yes, the truffles are randomly distributed. Running a chi-squared test on the observed and expected frequencies results in a p-value of 0.7785. This means that we fail to reject the null, indicating that the truffles are randomly located around the forest. 
+
+
+```{r}
+column1 <- c("0","1","2","3",">3")
+column2 <- c(203,29,18,13,15)
+column3 <- c(166.8, 166.8, 166.8,166.8)
+
+truffles <- data.frame(truffle_count = column1, frequency = column2, expected_frequency = column3)
+
+expected_freq <- 0.6*278
+
+expected_freqs <- rep(expected_freq, num_categories)
+
+truffles$expected_freq = expected_freqs
+
+truffles$expected_prob <- rep(0.2, 5)
+
+truffles$observed_prob <- truffles$frequency/278
+
+chi_sq_test <- chisq.test(truffles$observed_prob, p = truffles$expected_prob)
+chi_sq_test
+
+
+
+
+```
+
+### 2. The following list gives the number of degrees of freedom and the chi-squared test statistic for several goodness-of-fit test. Find the P-value for each test.
+
+
+```{r}
+column1 <- c(1,4,2,10,1)
+column2 <- c(4.12,1.02,9.5,12.4,2.48)
+
+deg_freedom <- data.frame(df = column1, chi_sq = column2)
+
+
+p_values <- 1 - pchisq(deg_freedom$chi_sq, deg_freedom$df)
+
+
+deg_freedom$p_value <- p_values
+
+
+print(deg_freedom)
+
+```
+
+### 3. Soccer reaches its apex every four years at the World Cup, attracting worldwide attention and fanatic devotion. The World Cup is widely thought to be the event that decides the best soccer team in the world. But how much do skill differences determine the outcome? If the probability of a goal is the same for all teams and games, and if goals are independent, then we would expect the frequency distribution of goals per game to approximate a Poisson distribution. In contrast, if skill differences really matter, then we would expect more high scores and more low scores than predicted from the Poisson distribution. The following table tallies the number of goals scored by one of the two teams (randomly chosen) in every game of the knockout round of the World Cup from 1986 through 2010.
+
+```{r}
+column1 <- c(0,1,2,3,4,5,">5", "total")
+column2 <- c(37,44,21,10,4,1,0,117)
+
+soccer <- data.frame(goals = column1, frequency = column2)
+```
+
+#### a. Plot the frequency distribution of goals per team using the data in the table. 
+### b. What is the mean number of goals per game?
+```{r}
+
+```
+#### c. Using the Poisson distribution, calculate the expected frequency of games and teams with 0, 1, 2, ….,5 goals, assuming independence and equal probability of scoring.
+```{r}
+
+```
+#### d. Overlay the expected frequencies calculated in part c on the graph you created in part a. Do they appear similar?
+```{r}
+
+```
+#### e. If skill differences do not matter, would you expect the variance in the number of goals per team and side to be less than, equal to, or greater than the mean number of goals? Calculate the variance in the number of goals per team and side. How similar is this to the mean?
+
+```{r}
+
+```
+
+### 4. One thousand coins were each flipped eight times, and the number of heads was recorded for each coin. The results are as follows:
+
+```{r}
+column1 <- c(0,1,2,3,4,5,6,7,8)
+column2 <- c(6,32,105,186,236,201,98,33,103)
+
+coin_flips <- data.frame(heads = column1, coins = column2)
+```
+
+#### a. . Test whether the distribution of coin flips matches the expected frequencies from a binomial distribution assuming all fair coins.
+```{r}
+
+```
+#### b. . If the binomial distribution is a poor fit to the data, identify in what way the distribution does not match the expectation.
+
+
+### 5. Hurricanes hit the United States often and hard, causing some loss of life and enormous economic costs. They are ranked in severity by the Saffir-Simpson scale, which ranges from Category 1 to Category 5, with 5 being the worst. In some years, as many as three hurricanes that rate a Category 3 or higher hit the US coastline. In other years, no hurricane of this severity hits the United States. The following table lists the number of years that had 0, 1, 2, 3, or more hurricanes of at least Category 3 in severity, over the 100 years of the 20th century (Blake et al., 2005).
+```{r}
+column1 <- c(0,1,2,3,">3")
+column2 <- c(50,39,7,4,0)
+
+hurricanes <- data.frame(cat_3 = column1, years = column2)
+```
+#### a. What is the mean number of severe hurricanes to hit the United States per year?
+#### b. What model would describe the distribution of hurricanes per year, if they were to hit independently of each other and if the probability of a hurricane were the same every year?
+```{r}
+
+```
+#### c. Test the fit of the model for part (b) to the data.
+```{r}
+
+```
+
+
+### 6. Do people typically use a particular ear preferentially when listening to strangers? Marzoli and Tomassi (2009) had a researcher approach and speak to strangers in a noisy nightclub. An observer scored whether the person approached turned either the left or the right ear toward the questioner. Of 25 participants, 19 turned the right ear toward the questioner and 6 offered the left ear. Is this evidence of population difference from 50% for each ear? Use the following steps to help answer this question with a binomial test. Consider that the assumptions of the binomial test are met in this study.
+#### a. State the null and alternative hypotheses.
+#### b. What is the observed value of the test statistic?
+```{r}
+
+```
+#### b. What is the observed value of the test statistic?
+```{r}
+
+```
+#### d. List all possible outcomes in which the number of right ears is greater than the 19 observed.
+#### e. Calculate the probability under the null hypothesis of each of the extreme outcomes listed in (d).
+```{r}
+
+```
+#### f. Calculate the probability of 19 or more right-eared turns under the null hypothesis.
+```{r}
+
+```
+#### g. Give the two-tailed P-value based on your answer to (f).
+#### h. Interpret this P-value. What does it indicate?
+#### i. State the conclusion from your test.
+
+### 7. Assume that a null hypothesis is true. Which one of the following statements is true?
+#### a. A study with a larger sample is more likely than a smaller study to get the result that P < 0.05.
+#### b. A study with a larger sample is less likely than a smaller study to get the result that P < 0.05.
+#### c. A study with larger sample is equally likely compared to a smaller study to get the result that P < 0.05.
+
+### 8. Assume a random sample. What effect does increasing the sample size have on:
+#### a. The probability of committing a Type I error?
+#### b. The probability of committing a Type II error?
+#### c. The significance level?
+
+### 9. In the toad experiment we looked at in the class, what would the P-value have been if
+#### a. 15 toads were right-handed and the rest were left-handed?
+#### b. 13 toads were right-handed and the rest were left-handed?
+#### c. 10 toads were right-handed and the rest were left-handed?
+#### d. 7 toads were right-handed and the rest were left-handed?
