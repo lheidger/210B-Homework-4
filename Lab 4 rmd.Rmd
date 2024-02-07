@@ -33,10 +33,6 @@ truffles$observed_prob <- truffles$frequency/278
 chi_sq_test <- chisq.test(truffles$observed_prob, p = truffles$expected_prob)
 chi_sq_test
 
-
-
-
-
 ```
 
 ### 2. The following list gives the number of degrees of freedom and the chi-squared test statistic for several goodness-of-fit test. Find the P-value for each test.
