@@ -16,22 +16,17 @@ Yes, the truffles are randomly distributed. Running a chi-squared test on the ob
 ```{r}
 column1 <- c("0","1","2","3",">3")
 column2 <- c(203,29,18,13,15)
-column3 <- c(166.8, 166.8, 166.8,166.8)
+column3 <- c(0.5488,0.3292,0.0988,0.019,0.0042)
+column4 <- c(152.3,91.46,27.5,5.49,1.2)
 
-truffles <- data.frame(truffle_count = column1, frequency = column2, expected_frequency = column3)
+truffles <- data.frame(truffle_count = column1, frequency = column2, expected_frequency = column3, observed_frequency = column4)
 
-expected_freq <- 0.6*278
 
-expected_freqs <- rep(expected_freq, num_categories)
-
-truffles$expected_freq = expected_freqs
-
-truffles$expected_prob <- rep(0.2, 5)
-
-truffles$observed_prob <- truffles$frequency/278
-
-chi_sq_test <- chisq.test(truffles$observed_prob, p = truffles$expected_prob)
+chi_sq_test <- chisq.test(truffles$observed_frequency, p = truffles$expected_frequency)
 chi_sq_test
+
+
+
 
 ```
 
@@ -80,22 +75,57 @@ The mean number of goals is 6.85 goals.
 mean_value <- sum(soccer_2$goals * soccer_2$frequency) / sum(soccer_2$goals)
 
 # Create the plot
-ggplot(soccer, aes(x = goals, y = frequency)) +
+soccer2_plot <- ggplot(soccer, aes(x = goals, y = frequency)) +
   geom_bar(stat = "identity", fill = "skyblue") +
   geom_hline(yintercept = mean_value, color = "red", linetype = "dashed", size = 1) +
   geom_text(aes(label = paste("Mean:", round(mean_value, 2))), 
-            x = "4.5", y = mean_value + 2, color = "red", size = 4, hjust = 0) +
+             y = mean_value + 2, color = "red", size = 4, hjust = 0) +
   labs(title = "Soccer Goals Frequency", x = "Number of Goals", y = "Frequency") +
   theme_minimal()
+soccer2_plot
 ```
-#### c. Using the Poisson distribution, calculate the expected frequency of games and teams with 0, 1, 2, ….,5 goals, assuming independence and equal probability of scoring.
-```{r}
 
+#### c. Using the Poisson distribution, calculate the expected frequency of games and teams with 0, 1, 2, ….,5 goals, assuming independence and equal probability of scoring.
+
+
+```{r}
+column1 <- c(1, 2, 3, 4, 5, "<5")
+column2 <- c(37, 44, 21, 10, 4, sum(c(37, 44, 21, 10, 4)))
+
+soccer <- data.frame(goals = column1, frequency = column2)
+
+total_games <- sum(soccer$frequency)
+
+
+
+lambda <- 6.85
+
+## Updated code
+
+column1_3 <- c(0,1,2,3,4,5)
+column2_3 <- c(37,44,21,10,4,1)
+soccer3 <- data.frame(goals = column1_3, frequency = column2_3)
+
+soccer3$exp_freq <- 117 *(((exp(-1.1))*(1.1^(soccer3$goals)))/factorial(soccer3$goals))
+soccer3
+
+## instead, call poisson distribution
 ```
 #### d. Overlay the expected frequencies calculated in part c on the graph you created in part a. Do they appear similar?
+They are somewhat similar, but with different values. 
 ```{r}
+soccer3_plot <- ggplot(expected_df, aes(x = goals, y = expected_frequency)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_hline(yintercept = mean_value, color = "red", linetype = "dashed", size = 1) +
+  geom_text(aes(label = paste("Mean:", round(mean_value, 2))), 
+             y = mean_value + 2, color = "red", size = 4, hjust = 0) +
+  labs(title = "Soccer Goals Frequency", x = "Number of Goals", y = "Frequency") +
+  theme_minimal()
 
+
+cowplot::plot_grid(soccer2_plot, soccer3_plot, ncol = 1)
 ```
+
 #### e. If skill differences do not matter, would you expect the variance in the number of goals per team and side to be less than, equal to, or greater than the mean number of goals? Calculate the variance in the number of goals per team and side. How similar is this to the mean?
 
 ```{r}
@@ -103,17 +133,24 @@ ggplot(soccer, aes(x = goals, y = frequency)) +
 ```
 
 ### 4. One thousand coins were each flipped eight times, and the number of heads was recorded for each coin. The results are as follows:
-
 ```{r}
 column1 <- c(0,1,2,3,4,5,6,7,8)
 column2 <- c(6,32,105,186,236,201,98,33,103)
 
 coin_flips <- data.frame(heads = column1, coins = column2)
-```
 
+coin_flips$expected_prob <- rep(0.5, 9)
+
+coin_flips$observed_prob <- coin_flips$coins/1000
+```
 #### a. . Test whether the distribution of coin flips matches the expected frequencies from a binomial distribution assuming all fair coins.
 ```{r}
+total_flips <- sum(coin_flips$coins)
 
+expected_freq <- dbinom(0:8, size = 8, prob = 0.5) * total_flips
+
+chi_sq_test <- chisq.test(x = coin_flips$observed_prob, p = 0.5)
+chi_sq_test
 ```
 #### b. . If the binomial distribution is a poor fit to the data, identify in what way the distribution does not match the expectation.
 
