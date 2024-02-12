@@ -6,13 +6,19 @@ output:
   pdf_document:
     latex_engine: xelatex
 ---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+library(tidyverse)
+library(dplyr)
+```
+
+
 ## Lab 4
 
 ### 1. Truffles are a great delicacy, sending thousands of mushroom hunters into the forest each fall to find them. A set of plots of equal size in an old-growth forest in Northern California was surveyed to count the number of truffles (Waters et al., 1997). The resulting distribution is presented in the following table. Are truffles randomly located around the forest? How can you tell? (The mean number of truffles per plot, calculated from these data, is 0.60)
-
-Yes, the truffles are randomly distributed. Running a chi-squared test on the observed and expected frequencies results in a p-value of <0.05. This means that we reject the null, indicating that the truffles are not randomly located around the forest. 
-
-
+H0: truffles are random (poisson)
+HA: truffles are not random (not poisson)
+Running a chi-squared test on the observed and expected frequencies results in a p-value of <0.05. This means that we reject the null, indicating that the truffles are not randomly located around the forest. 
 ```{r}
 count <- c("0","1","2",">3")
 observ <- c(203,39,18,28)
@@ -134,7 +140,7 @@ ggplot(soccer3, aes(x = goals)) +
 
 #### e. If skill differences do not matter, would you expect the variance in the number of goals per team and side to be less than, equal to, or greater than the mean number of goals? Calculate the variance in the number of goals per team and side. How similar is this to the mean?
 
-If skill differences do not matter, then we'd expect the mean and variance to be equal. This is because a random outcome would resemble a poisson distribution where the mean and variance are equal. The calculated variance is 1.26 which is close to the mean, but slightly greater than it. 
+If skill differences do not matter, then we'd expect the mean and variance to be equal. This is because a random outcome would resemble a poisson distribution where the mean and variance are equal. The calculated variance is 1.26 goals squared which is close to the mean of 1.17 goals, but slightly greater than it. 
 
 ```{r}
 var <- (sum(((soccer3$goals-lambda)^2)*soccer3$frequency))/116 
@@ -176,8 +182,6 @@ ggplot(coin_flips, aes(x = heads)) +
   scale_color_manual(values = c("Observed" = "blue", "Expected" = "red")) +
   theme_minimal()
 ```
-
-
 
 ### 5. Hurricanes hit the United States often and hard, causing some loss of life and enormous economic costs. They are ranked in severity by the Saffir-Simpson scale, which ranges from Category 1 to Category 5, with 5 being the worst. In some years, as many as three hurricanes that rate a Category 3 or higher hit the US coastline. In other years, no hurricane of this severity hits the United States. The following table lists the number of years that had 0, 1, 2, 3, or more hurricanes of at least Category 3 in severity, over the 100 years of the 20th century (Blake et al., 2005).
 ```{r}
@@ -234,7 +238,7 @@ The p-value of our goodness-of-fit test is not less than 0.05, so we fail to rej
 
 ### 6. Do people typically use a particular ear preferentially when listening to strangers? Marzoli and Tomassi (2009) had a researcher approach and speak to strangers in a noisy nightclub. An observer scored whether the person approached turned either the left or the right ear toward the questioner. Of 25 participants, 19 turned the right ear toward the questioner and 6 offered the left ear. Is this evidence of population difference from 50% for each ear? Use the following steps to help answer this question with a binomial test. Consider that the assumptions of the binomial test are met in this study.
 #### a. State the null and alternative hypotheses.
-Null hypothesis: 50% of people will prefer the use of their right ear (or left ear) when listening to strangers.
+Null hypothesis: 50% of people will prefer the use of their right ear when listening to strangers.
 
 Alternative hypothesis: A percentage different than 50% of people will prefer the use of their right ear.
 
@@ -261,7 +265,7 @@ choose(25, 25)*(0.5^25)
 
 ```
 #### f. Calculate the probability of 19 or more right-eared turns under the null hypothesis.
-0.0073
+The probability of 19 or more right-eared turns is 0.0073.
 ```{r}
 0.001583397+0.0003769994+6.854534e-05+8.940697e-06+7.450581e-07+2.980232e-08+0.0053
 ```
@@ -272,7 +276,7 @@ The two-tailed P-value is 0.01467731.
 ```
 
 #### h. Interpret this P-value. What does it indicate?
-p-value less than our alpha, indicating that we reject the null in favor of the alternative. It's likely that the percentage of people who use their right ear to listen is not 0.5. 
+The p-value less than our alpha, indicating that we reject the null in favor of the alternative. It's likely that the percentage of people who use their right ear to listen is not 0.5. 
 #### i. State the conclusion from your test.
 It's likely that the percentage of people who use their right ear to listen is not 0.5. 
 
@@ -293,7 +297,7 @@ The significance level is independent of sample size, so it is not affected.
 
 ### 9. In the toad experiment we looked at in the class, what would the P-value have been if
 #### a. 15 toads were right-handed and the rest were left-handed?
-0.007538
+P-value: 0.007538
 ```{r}
 prob <- 0.5
 trials <- 18
@@ -303,20 +307,20 @@ binom.test(15, 18, p = 0.5, alternative = "two.sided")
 ```
 
 #### b. 13 toads were right-handed and the rest were left-handed?
-0.09625
+P-value: 0.09625
 ```{r}
 binom.test(13, 18, p = 0.5, alternative = "two.sided")
 ```
 
 #### c. 10 toads were right-handed and the rest were left-handed?
-0.8145
+P-value: 0.8145
 ```{r}
 binom.test(10, 18, p = 0.5, alternative = "two.sided")
 
 ```
 
 #### d. 7 toads were right-handed and the rest were left-handed?
-0.4807
+P-value: 0.4807
 ```{r}
 binom.test(7, 18, p = 0.5, alternative = "two.sided")
 
